@@ -20,17 +20,24 @@ import javafx.util.Duration;
  */
 public class App extends Application {
     
+     final short SCENE_HEIGHT = 480;
+     final short SCENE_WIDTH = 640;
+    
     int ballCenterX = 0;
     int ballCurrentSpeedX = 5;
     int ballDirectionX = 1;
     int ballCenterY = 0;
     int ballCurrentSpeedY = 5;
     int ballDirectionY = 1;
+    
+    short stickHeight = 50;
+    short stickPosY = (short) ((SCENE_HEIGHT - stickHeight)/2);
+    byte stickCurrentSpeed = 2;
+    byte stickDirection = 0;
     @Override
     public void start(Stage stage) {
         
-       final short SCENE_HEIGHT = 480;
-       final short SCENE_WIDTH = 640;
+      
         
         
         Pane root = new Pane();
@@ -47,33 +54,28 @@ public class App extends Application {
         
         root.getChildren().add(circleBall);
         
-        short rectHeight = 50;
+        
         Rectangle rectStick = new Rectangle();
         rectStick.setWidth(10);
-        rectStick.setHeight(rectHeight);
+        rectStick.setHeight(stickHeight);
         rectStick.setX(SCENE_WIDTH - 40);
-        rectStick.setY((SCENE_HEIGHT - rectHeight)/2);
+        rectStick.setY(stickPosY);
         root.getChildren().add(rectStick);
         rectStick.setFill(Color.WHITE);
         
+        
         scene.setOnKeyPressed(new EventHandler <KeyEvent> (){
             public void handle (final KeyEvent keyEvent){
-                switch (keyEvent.getCode())
-                    case UP;
+                switch (keyEvent.getCode()) {
+                    case UP:
+                        stickDirection = -1;
                     break;
-                    
-               
-                    
-                    
-                    
-                if (keyEvent.getCode() == KeyCode.UP){
-                    System.out.println("arriba");
-                }
+                    case DOWN:
+                        stickDirection = 1;
+                    break;  
+                }    
             }
-            
         });
-
-        
         Timeline timeline = new Timeline(
             // 0.017 ~= 60 FPS
             new KeyFrame(Duration.seconds(0.017), new EventHandler<ActionEvent>() {
@@ -93,8 +95,20 @@ public class App extends Application {
                     } else if (ballCenterY<=0){
                         ballDirectionY= +1;
                     }
-                    
-                    
+                    rectStick.setY(stickPosY);
+                    stickPosY += stickCurrentSpeed * stickDirection;
+                    if (stickPosY <= 0 ||stickPosY >= SCENE_HEIGHT-stickHeight) {
+                        stickDirection = 0;    
+                    }
+                    if (stickPosY <= 0) {
+                        stickDirection = 0;    
+                        stickPosY = 0;
+                
+                    }else if (stickPosY >= SCENE_HEIGHT-stickHeight){
+                        stickDirection = 0;    
+                        stickPosY = (short)(SCENE_HEIGHT- stickHeight) ;
+                    }
+                    Shape.intersect (circleBall, rect)
                 }
             })                
         );
