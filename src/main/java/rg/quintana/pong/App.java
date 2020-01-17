@@ -6,12 +6,13 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -45,6 +46,26 @@ public class App extends Application {
         scene.setFill(Color.BLACK);
         stage.setScene(scene);
         stage.show();
+        
+        HBox paneScores = new HBox ();
+        paneScores.setTranslateY (20);
+        paneScores.setMinWidth (SCENE_WIDTH );
+        paneScores.setAlignment (SCENE_WIDTH/2, i, SCENE_WIDTH/2, i + 10 );
+        
+        
+        
+        
+        
+        
+        
+        
+        for (int i = 0; i<SCENE_HEIGHT; i += 30) {
+        Line line = new Line (SCENE_WIDTH/2, i, SCENE_WIDTH/2, i + 10);
+        line.setStroke(Color.WHITE);
+        line.setStrokeWidth (4);
+        root.getChildren().add(line);
+        }
+    
         
         Circle circleBall = new Circle();
         circleBall.setCenterX(10);
@@ -108,10 +129,17 @@ public class App extends Application {
                         stickDirection = 0;    
                         stickPosY = (short)(SCENE_HEIGHT- stickHeight) ;
                     }
-                    Shape.intersect (circleBall, rect)
+                    Shape shapeCollision = Shape.intersect(circleBall, rectStick);
+                    boolean colisionVacia = shapeCollision.getBoundsInLocal().isEmpty();
+                    if(colisionVacia == false) {
+                        System.out.println("Ha colisionado");
+                        ballDirectionX = -1;
+                    }
                 }
             })                
-        );
+            );
+    
+ 
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();        
         
